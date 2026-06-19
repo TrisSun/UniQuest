@@ -1,4 +1,4 @@
-#ifndef QUEST_H
+﻿#ifndef QUEST_H
 #define QUEST_H
 
 #include <string>

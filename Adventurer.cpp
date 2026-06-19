@@ -1,4 +1,4 @@
-#include "Adventurer.h"
+﻿#include "Adventurer.h"
 #include <sstream>
 
 Adventurer::Adventurer() : username(""), password(""), school(""), level(1), exp(0) {}

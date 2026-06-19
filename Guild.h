@@ -1,4 +1,4 @@
-#ifndef GUILD_H
+﻿#ifndef GUILD_H
 #define GUILD_H
 
 #include <string>
