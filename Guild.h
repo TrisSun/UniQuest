@@ -39,6 +39,7 @@ private:
     void registerUser();
     void login();
     void logout();
+    void changeJob();   // 转职:5 级后选择职业,20 级后可转入进阶职业
 
     // 委托操作
     void publishQuest();

@@ -195,10 +195,20 @@ void Guild::registerUser() {
         return;
     }
 
+    // 选择初始称号(1~5 级显示):新人 或 菜鸟
+    cout << "请选择你的初始称号(1~5 级期间显示):" << endl;
+    cout << "  1. 新人" << endl;
+    cout << "  2. 菜鸟" << endl;
+    int titleChoice = readInt("请选择(默认 1): ");
+    string novice = (titleChoice == 2) ? "菜鸟" : "新人";
+
     // 校验全部通过,创建新用户加入内存并立即写回文件保存
-    users.push_back(Adventurer(username, password, school));
+    Adventurer newcomer(username, password, school);
+    newcomer.setNoviceTitle(novice);
+    users.push_back(newcomer);
     saveUsers();
-    cout << "注册成功!欢迎你," << username << "!现在可以登录了。" << endl;
+    cout << "注册成功!欢迎你,[" << novice << "] " << username
+         << "!现在可以登录了。" << endl;
 }
 
 // 登录:查找用户名并比对密码,成功后记录当前用户下标
@@ -224,6 +234,77 @@ void Guild::login() {
 void Guild::logout() {
     currentUserIndex = -1;
     cout << "已退出登录。" << endl;
+}
+
+// 转职:5 级解锁基础职业,20 级解锁进阶职业(需先是对应的基础职业)。
+// 转职后冒险者的称号即为其职业名。
+void Guild::changeJob() {
+    Adventurer& me = users[currentUserIndex];
+    int lv = me.getLevel();
+    cout << "\n----- 转职 -----" << endl;
+    if (lv < 5) {
+        cout << "等级达到 5 级才能转职,当前 Lv." << lv << ",继续努力!" << endl;
+        return;
+    }
+
+    cout << "当前身份:[" << me.getTitle() << "] " << me.getUsername()
+         << " (Lv." << lv << ")" << endl;
+    cout << "可选基础职业(5 级解锁):" << endl;
+    cout << "  1. 学者     (20 级可进阶为 贤者)" << endl;
+    cout << "  2. 侦探     (20 级可进阶为 天眼)" << endl;
+    cout << "  3. 画家     (20 级可进阶为 吟游诗人)" << endl;
+    cout << "  4. 好人     (20 级可进阶为 君子)" << endl;
+    cout << "  5. 游侠" << endl;
+    cout << "  6. 信使" << endl;
+    cout << "  7. 赏金猎人" << endl;
+    if (lv >= 20) {
+        cout << "可选进阶职业(20 级解锁,需当前为对应基础职业):" << endl;
+        cout << "  8. 贤者     (需 学者)" << endl;
+        cout << "  9. 天眼     (需 侦探)" << endl;
+        cout << " 10. 吟游诗人 (需 画家)" << endl;
+        cout << " 11. 君子     (需 好人)" << endl;
+    }
+    cout << "  0. 返回" << endl;
+
+    int choice = readInt("请选择要转入的职业: ");
+    if (choice == 0) return;
+
+    string newJob;     // 目标职业名
+    string needBase;   // 进阶职业所需的基础职业(基础职业留空)
+    switch (choice) {
+        case 1: newJob = "学者"; break;
+        case 2: newJob = "侦探"; break;
+        case 3: newJob = "画家"; break;
+        case 4: newJob = "好人"; break;
+        case 5: newJob = "游侠"; break;
+        case 6: newJob = "信使"; break;
+        case 7: newJob = "赏金猎人"; break;
+        case 8:  newJob = "贤者";     needBase = "学者"; break;
+        case 9:  newJob = "天眼";     needBase = "侦探"; break;
+        case 10: newJob = "吟游诗人"; needBase = "画家"; break;
+        case 11: newJob = "君子";     needBase = "好人"; break;
+        default:
+            cout << "无效选项!" << endl;
+            return;
+    }
+
+    // 进阶职业(needBase 非空)需要 20 级且当前已是对应基础职业
+    if (!needBase.empty()) {
+        if (lv < 20) {
+            cout << newJob << " 属于进阶职业,需达到 20 级才能转入!" << endl;
+            return;
+        }
+        if (me.getJob() != needBase) {
+            cout << "转入 " << newJob << " 前,你必须先是 " << needBase
+                 << "(当前职业:" << (me.getJob().empty() ? "无" : me.getJob())
+                 << ")!" << endl;
+            return;
+        }
+    }
+
+    me.setJob(newJob);
+    saveUsers();
+    cout << "转职成功!你现在是 [" << newJob << "] " << me.getUsername() << "!" << endl;
 }
 
 // ---------------- 委托操作 ----------------
@@ -274,7 +355,8 @@ void Guild::takeQuest() {
             quests[i].setTaker(me);
             quests[i].setStatus(QUEST_TAKEN);
             saveQuests();
-            cout << "接取成功!请努力完成委托:" << quests[i].getTitle() << endl;
+            cout << "接取成功![" << users[currentUserIndex].getTitle() << "] "
+                 << me << " 请努力完成委托:" << quests[i].getTitle() << endl;
             return;
         }
     }
@@ -356,6 +438,7 @@ void Guild::showMyInfo() {
     Adventurer& me = users[currentUserIndex];
     cout << "\n===== 我的信息 =====" << endl;
     cout << "用户名:" << me.getUsername() << endl;
+    cout << "称号/职业:" << me.getTitle() << endl;
     cout << "学校:" << me.getSchool() << endl;
     cout << "等级:Lv." << me.getLevel() << endl;
     cout << "经验:" << me.getExp() << "/" << me.expToNext() << endl;
@@ -405,14 +488,16 @@ void Guild::authMenu() {
 
 // 登录后的主菜单:提供浏览/发布/接取/完成委托等功能
 void Guild::mainMenu() {
-    cout << "\n========== 主菜单 (当前用户:"
-         << users[currentUserIndex].getUsername() << ") ==========" << endl;
+    Adventurer& me = users[currentUserIndex];
+    cout << "\n========== 主菜单 (当前用户:[" << me.getTitle() << "] "
+         << me.getUsername() << " Lv." << me.getLevel() << ") ==========" << endl;
     cout << "  1. 浏览所有委托" << endl;
     cout << "  2. 发布委托" << endl;
     cout << "  3. 接取委托" << endl;
     cout << "  4. 提交完成委托" << endl;
     cout << "  5. 查看我的信息" << endl;
-    cout << "  6. 退出登录" << endl;
+    cout << "  6. 转职(5 级解锁)" << endl;
+    cout << "  7. 退出登录" << endl;
     cout << "  0. 退出系统" << endl;
     int choice = readInt("请选择: ");
     switch (choice) {   // 根据输入分发到对应功能
@@ -421,7 +506,8 @@ void Guild::mainMenu() {
         case 3: takeQuest(); break;
         case 4: completeQuest(); break;
         case 5: showMyInfo(); break;
-        case 6: logout(); break;
+        case 6: changeJob(); break;
+        case 7: logout(); break;
         case 0:
             cout << "感谢使用,再见!" << endl;
             exit(0);    // 直接结束整个程序
