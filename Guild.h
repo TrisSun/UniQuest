@@ -1,12 +1,19 @@
-﻿#ifndef GUILD_H
+﻿// ============================================================
+// Guild.h
+// 冒险者公会(总控类)的声明。
+// Guild 把 Adventurer(用户)和 Quest(委托)组织起来,负责
+// 数据的加载/保存、注册登录、发布/接取/完成委托以及菜单交互,
+// 是整个系统的核心。
+// ============================================================
+#ifndef GUILD_H   // 头文件保护,防止被重复包含
 #define GUILD_H
 
 #include <string>
-#include <vector>
+#include <vector>          // 用 vector 容器存放所有用户和委托
 #include "Adventurer.h"
 #include "Quest.h"
 
-// 冒险者工会:整个系统的总控类,管理用户与委托,负责文件读写与菜单交互
+// 冒险者公会:整个系统的总控类,管理用户与委托,负责文件读写与菜单交互
 class Guild {
 public:
     Guild();
