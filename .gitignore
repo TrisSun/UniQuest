@@ -1,0 +1,36 @@
+# ===== Visual Studio 本地缓存与用户设置 =====
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ===== 编译输出目录 =====
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww]in32/
+[Oo]ut/
+ipch/
+
+# ===== 编译生成的中间/可执行文件 =====
+*.exe
+*.obj
+*.o
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.log
+*.lastbuildstate
+
+# ===== 程序运行时生成的数据文件 =====
+# 这些由程序自动创建,属于个人测试数据,不纳入版本库
+users.txt
+quests.txt
+
+# ===== 其它 =====
+*.tmp
+Thumbs.db
+.DS_Store
