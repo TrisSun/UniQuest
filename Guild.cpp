@@ -12,14 +12,18 @@
 
 using namespace std;
 
-// 内置的江苏省高校名单,只有名单内学校的学生才能注册
-static const char* JIANGSU_UNIVERSITIES[] = {
+// 高校白名单数据文件名:每行一所学校,# 开头为注释。
+// 白名单已抽离到该独立文件,方便随时增删学校而无需改动代码。
+static const char* UNIVERSITY_FILE = "universities.txt";
+
+// 当 universities.txt 缺失或为空时使用的内置默认名单(兜底)
+static const char* DEFAULT_UNIVERSITIES[] = {
     "南京大学", "东南大学", "南京航空航天大学", "南京理工大学",
     "河海大学", "南京师范大学", "苏州大学", "江南大学",
     "中国矿业大学", "南京农业大学", "江苏大学", "扬州大学",
     "南京邮电大学", "南京工业大学", "中国药科大学"
 };
-static const int JIANGSU_COUNT = 15;
+static const int DEFAULT_UNIVERSITY_COUNT = 15;
 
 // 读取一整行输入(用于可能含空格的内容)
 static string readLine(const string& prompt) {
@@ -42,6 +46,7 @@ Guild::Guild() : currentUserIndex(-1), nextQuestId(1) {}
 
 // 程序主流程:先读入文件数据,再不断显示菜单处理用户操作
 void Guild::run() {
+    loadUniversities();
     loadUsers();
     loadQuests();
 
@@ -114,6 +119,36 @@ void Guild::saveQuests() {
     fout.close();
 }
 
+// 去掉字符串首尾的空白(空格、制表符、回车),避免文件里多余空格影响匹配
+static string trim(const string& s) {
+    size_t begin = s.find_first_not_of(" \t\r\n");
+    if (begin == string::npos) return "";
+    size_t end = s.find_last_not_of(" \t\r\n");
+    return s.substr(begin, end - begin + 1);
+}
+
+// 从 universities.txt 逐行读入高校白名单:
+// 跳过空行和以 # 开头的注释行;若文件不存在或没有任何有效条目,则回退到内置默认名单。
+void Guild::loadUniversities() {
+    jiangsuUniversities.clear();
+    ifstream fin(UNIVERSITY_FILE);
+    if (fin) {
+        string line;
+        while (getline(fin, line)) {
+            string name = trim(line);
+            if (name.empty() || name[0] == '#') continue; // 跳过空行与注释
+            jiangsuUniversities.push_back(name);
+        }
+        fin.close();
+    }
+    // 文件缺失或内容为空时,使用内置默认名单兜底,保证程序可用
+    if (jiangsuUniversities.empty()) {
+        for (int i = 0; i < DEFAULT_UNIVERSITY_COUNT; ++i) {
+            jiangsuUniversities.push_back(DEFAULT_UNIVERSITIES[i]);
+        }
+    }
+}
+
 // ---------------- 辅助函数 ----------------
 
 // 按用户名在 users 中查找,找到返回其下标,找不到返回 -1(线性查找)
@@ -126,8 +161,8 @@ int Guild::findUser(const string& username) const {
 
 // 校验学校是否在内置的江苏高校名单内,用于限制只有江苏学生能注册
 bool Guild::isJiangsuUniversity(const string& school) const {
-    for (int i = 0; i < JIANGSU_COUNT; ++i) {
-        if (school == JIANGSU_UNIVERSITIES[i]) return true;
+    for (size_t i = 0; i < jiangsuUniversities.size(); ++i) {
+        if (school == jiangsuUniversities[i]) return true;
     }
     return false;
 }

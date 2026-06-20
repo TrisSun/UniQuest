@@ -22,8 +22,9 @@ public:
     void run();
 
 private:
-    std::vector<Adventurer> users; // 所有用户
-    std::vector<Quest> quests;     // 所有委托
+    std::vector<Adventurer> users;              // 所有用户
+    std::vector<Quest> quests;                  // 所有委托
+    std::vector<std::string> jiangsuUniversities; // 江苏省高校白名单(从文件加载)
     int currentUserIndex;          // 当前登录用户在 users 中的下标,-1 表示未登录
     int nextQuestId;               // 下一个委托编号
 
@@ -32,6 +33,7 @@ private:
     void saveUsers();
     void loadQuests();
     void saveQuests();
+    void loadUniversities();       // 从 universities.txt 加载高校白名单
 
     // 账号
     void registerUser();
