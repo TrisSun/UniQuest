@@ -4,8 +4,7 @@
 // 一个 Quest 对象代表公告栏上的一条委托,记录它的内容、
 // 发布者/接取者以及当前所处的状态。
 // ============================================================
-#ifndef QUEST_H   // 头文件保护,防止被重复包含
-#define QUEST_H
+#pragma once   // 头文件保护,防止被重复包含
 
 #include <string>
 
@@ -56,5 +55,3 @@ private:
     int rewardExp;         // 完成奖励经验
     int difficulty;        // 难度(1-5)
 };
-
-#endif

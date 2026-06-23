@@ -4,8 +4,7 @@
 // 一个 Adventurer 对象代表一个注册用户,保存其账号信息以及
 // 在公会中的成长数据(等级、经验)。
 // ============================================================
-#ifndef ADVENTURER_H   // 头文件保护,防止被重复包含
-#define ADVENTURER_H
+#pragma once   // 头文件保护,防止被重复包含
 
 #include <string>
 
@@ -52,5 +51,3 @@ private:
     std::string noviceTitle; // 自选的初始称号(新人/菜鸟)
     std::string job;         // 转职后的职业(空字符串表示未转职)
 };
-
-#endif

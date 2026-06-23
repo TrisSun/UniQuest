@@ -5,8 +5,7 @@
 // 数据的加载/保存、注册登录、发布/接取/完成委托以及菜单交互,
 // 是整个系统的核心。
 // ============================================================
-#ifndef GUILD_H   // 头文件保护,防止被重复包含
-#define GUILD_H
+#pragma once   // 头文件保护,防止被重复包含
 
 #include <string>
 #include <vector>          // 用 vector 容器存放所有用户和委托
@@ -56,5 +55,3 @@ private:
     int findUser(const std::string& username) const; // 返回下标,找不到返回 -1
     bool isJiangsuUniversity(const std::string& school) const;
 };
-
-#endif
