@@ -26,21 +26,21 @@ public:
     void fromLine(const std::string& line);
 
     // 下面是一组只读访问函数(getter),供外部获取私有成员的值
-    std::string getUsername() const;
-    std::string getPassword() const;
-    std::string getSchool() const;
-    int getLevel() const;
-    int getExp() const;
+    std::string getUsername() const;    //获取用户昵称
+    std::string getPassword() const;    //获取密码
+    std::string getSchool() const;      //获取学校
+    int getLevel() const;               //获取等级
+    int getExp() const;                 //获取经验
 
     // 称号 / 职业相关
     // noviceTitle:1~5 级未转职时显示的自选称号("新人" 或 "菜鸟")
     // job:转职后的职业名(为空表示未转职,显示按等级自动给出的称号)
-    std::string getNoviceTitle() const;
-    void setNoviceTitle(const std::string& t);
-    std::string getJob() const;
-    void setJob(const std::string& j);
+    std::string getNoviceTitle() const;//获取称号
+    void setNoviceTitle(const std::string& t);//设置称号
+    std::string getJob() const;//获取职业
+    void setJob(const std::string& j);//设置职业
     // 实际对外展示的称号:未转职按等级给(新人/菜鸟→冒险者→勇者),已转职显示职业
-    std::string getTitle() const;
+    std::string getTitle() const;//获取实际对外展示的称号
 
 private:
     std::string username;    // 用户名

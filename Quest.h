@@ -26,24 +26,24 @@ public:
           int difficulty);
 
     // 与文件一行文本互相转换(竖线 | 分隔)
-    std::string toLine() const;            // 打包成一行文本
-    void fromLine(const std::string& line);// 从一行文本还原
+    std::string toLine() const;            // 对象转成文件一行
+    void fromLine(const std::string& line);// 从文件一行还原对象
 
-    std::string statusText() const; // 把状态数字转成中文描述(待接取/进行中/已完成)
+    std::string statusText() const; // 把状态数字转成中文描述(待接取0/进行中1/已完成2)
 
     // 一组只读访问函数(getter)
-    int getId() const;
-    std::string getTitle() const;
-    std::string getDesc() const;
-    std::string getPublisher() const;
-    std::string getTaker() const;
-    int getStatus() const;
-    int getRewardExp() const;
-    int getDifficulty() const;
+    int getId() const;//获取编号
+    std::string getTitle() const;//获取标题
+    std::string getDesc() const;//获取描述
+    std::string getPublisher() const;//获取发布者
+    std::string getTaker() const;//获取接取者
+    int getStatus() const;//获取委托的状态(0待接取/1进行中/2已完成)
+    int getRewardExp() const;//获取奖励经验
+    int getDifficulty() const;//获取难度
 
     // 一组修改函数(setter):接取委托、改变委托状态时使用
-    void setTaker(const std::string& name);
-    void setStatus(int s);
+    void setTaker(const std::string& name);//设置接取者
+    void setStatus(int s);//设置委托的状态(0待接取/1进行中/2已完成)
 
 private:
     int id;                // 委托编号

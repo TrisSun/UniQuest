@@ -27,25 +27,25 @@ private:
     int currentUserIndex;          // 当前登录用户在 users 中的下标,-1 表示未登录
     int nextQuestId;               // 下一个委托编号
 
-    // 文件读写
-    void loadUsers();
-    void saveUsers();
-    void loadQuests();
-    void saveQuests();
+    // 文件读写（其中所用的存储文件有users.txt、quests.txt、universities.txt）
+    void loadUsers();//从users.txt加载用户
+    void saveUsers();//把用户写回文件
+    void loadQuests();//从quests.txt加载委托
+    void saveQuests();//把委托写回文件
     void loadUniversities();       // 从 universities.txt 加载高校白名单
 
-    // 账号
-    void registerUser();
-    void login();
-    void logout();
+    // 账号操作
+    void registerUser();//注册用户
+    void login();//登录
+    void logout();//退出登录
     void changeJob();   // 转职:5 级后选择职业,20 级后可转入进阶职业
 
     // 委托操作
-    void publishQuest();
-    void takeQuest();
-    void completeQuest();
-    void showAllQuests();
-    void showMyInfo();
+    void publishQuest();//发布委托
+    void takeQuest();//接取委托
+    void completeQuest();//提交完成委托
+    void showAllQuests();//显示所有委托
+    void showMyInfo();//显示我的信息
 
     // 菜单
     void authMenu();  // 未登录时的菜单
@@ -53,5 +53,5 @@ private:
 
     // 辅助
     int findUser(const std::string& username) const; // 返回下标,找不到返回 -1
-    bool isJiangsuUniversity(const std::string& school) const;
+    bool isJiangsuUniversity(const std::string& school) const;//判断学校是否在江苏省高校白名单中
 };
