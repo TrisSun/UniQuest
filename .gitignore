@@ -27,8 +27,8 @@ ipch/
 
 # ===== 程序运行时生成的数据文件 =====
 # 这些由程序自动创建,属于个人测试数据,不纳入版本库
-users.txt
-quests.txt
+#users.txt
+#quests.txt
 
 # ===== 其它 =====
 *.tmp
